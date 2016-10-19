@@ -9,6 +9,7 @@ struct BST {
     int value;
     struct BST* left;
     struct BST* right;
+    struct BST* parent;
 };
 
 /**
@@ -23,14 +24,15 @@ struct BST* create_bst(int k, int v);
 void destroy_bst(struct BST* bst);
 
 /**
- * Return the value associated with [k] in [bst]. If [k] is not in [bst]
- * behavior is undefined.
+ * Return a pointer to the value associated with [k] in [bst]. If [k] is not in
+ * the bst return NULL.
  * Precondition bst != NULL.
  */
-int bst_search(struct BST* bst, int k);
+int* bst_search(struct BST* bst, int k);
 
 /**
- * Insert [(k, v)] into [bst]. If [k] is already in [bst] behavior is undefined.
+ * Insert [(k, v)] into [bst]. If [k] is already in [bst] change the previous
+ * value instead of inserting.
  * Precondition bst != NULL.
  */
 void bst_insert(struct BST* bst, int k, int v);
