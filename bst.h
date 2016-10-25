@@ -6,10 +6,14 @@
 typedef int V;
 
 /**
- * A function poVer type for something that consumes values of the trees and
- * returns nothing.
+ * A function that consumes a value.
  */
-typedef void (*Consumer)(V);
+typedef void (*VConsumer)(V);
+
+/**
+ * A function that consumes an entire node (i.e. its key value pair).
+ */
+typedef void (*NConsumer)(int, V);
 
 /**
  * Represents a BST with ints as keys and values. Keys in [left] are < [key]
@@ -57,6 +61,11 @@ void bst_delete(struct BST* bst, int k);
 
 
 /**
+ * Does an in order traversal of [bst] calling [c] on each value.
+ */
+void bst_traverse_value(struct BST* bst, VConsumer c);
+
+/**
  * Does an in order traversal of [bst] calling [c] on each node.
  */
-void traverse(struct BST* bst, Consumer c);
+void bst_traverse_node(struct BST* bst, NConsumer c);

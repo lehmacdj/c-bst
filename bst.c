@@ -97,8 +97,14 @@ void bst_delete(struct BST* bst, int k) {
     }
 }
 
-void traverse(struct BST* bst, Consumer c) {
-    traverse(bst->left, c);
+void bst_traverse_value(struct BST* bst, VConsumer c) {
+    bst_traverse_value(bst->left, c);
     (*c)(bst->value);
-    traverse(bst->right, c);
+    bst_traverse_value(bst->right, c);
+}
+
+void bst_traverse_node(struct BST* bst, NConsumer c) {
+    bst_traverse_node(bst->left, c);
+    (*c)(bst->key, bst->value);
+    bst_traverse_node(bst->right, c);
 }
