@@ -12,6 +12,9 @@ struct BST* create_bst(int k, V v) {
 }
 
 void destroy_bst(struct BST* bst) {
+    if (bst == NULL)
+        return;
+
     destroy_bst(bst->left);
     destroy_bst(bst->right);
     free(bst);
@@ -98,12 +101,18 @@ void bst_delete(struct BST* bst, int k) {
 }
 
 void bst_traverse_value(struct BST* bst, VConsumer c) {
+    if (bst == NULL)
+        return;
+
     bst_traverse_value(bst->left, c);
     (*c)(bst->value);
     bst_traverse_value(bst->right, c);
 }
 
 void bst_traverse_node(struct BST* bst, NConsumer c) {
+    if (bst == NULL)
+        return;
+
     bst_traverse_node(bst->left, c);
     (*c)(bst->key, bst->value);
     bst_traverse_node(bst->right, c);
