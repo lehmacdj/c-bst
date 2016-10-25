@@ -96,3 +96,9 @@ void bst_delete(struct BST* bst, int k) {
         replace_node(b, NULL);
     }
 }
+
+void traverse(struct BST* bst, Consumer c) {
+    traverse(bst->left, c);
+    (*c)(bst->value);
+    traverse(bst->right, c);
+}
