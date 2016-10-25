@@ -43,12 +43,13 @@ void destroy_bst(struct BST* bst) {
  */
 struct BST* tree_containing_key(struct BST* bst, int k) {
     struct BST* b = bst;
-    while ((k < b->key && b->left != NULL) ||
-            (k > b->key && b->right != NULL)) {
-        if (k < bst->key)
-            b = bst->left;
-        else if (k > bst->key)
-            b = bst->right;
+
+    while ((k < b->key && b->left) || (k > b->key && b->right)) {
+        if (k < b->key) {
+            b = b->left;
+        } else if (k > b->key) {
+            b = b->right;
+        }
     }
 
     return b;
@@ -77,22 +78,24 @@ void bst_insert(struct BST* bst, int k, V v) {
  * Find the minimum key in the tree.
  */
 struct BST* find_min(struct BST* bst) {
-    return NULL;
+    struct BST* b = bst;
+    while(b) {
+        b = b->left;
+    }
+    return b;
 }
 
 /**
  * Replace [bst] with [node]. [node] should be an orphaned node (e.g. has no
  * pointers to it within the tree).
  */
-void replace_node(struct BST* bst, struct BST* node) {
+void replace_node_in_parent(struct BST* bst, struct BST* node) {
     struct BST* parent = bst->parent;
-    free(bst);
 
-    if (parent->left == node)
+    if (parent->left == bst)
         parent->left = node;
-    else if (parent->right == node)
+    if (parent->right == bst)
         parent->right = node;
-
     if (node != NULL)
         node->parent = parent;
 }
@@ -103,18 +106,18 @@ void bst_delete(struct BST* bst, int k) {
     if (b->key != k)
         return;
 
-    if (b->left != NULL && b->right != NULL) {
+    if (b->left && b->right) {
         struct BST* mid = find_min(b->right);
         mid->parent->left = NULL;
         mid->left = b->left;
         mid->right = b->right;
-        replace_node(b, mid);
-    } else if (b->left != NULL) {
-        replace_node(b, b->right);
-    } else if (b->right != NULL) {
-        replace_node(b, b->left);
+        replace_node_in_parent(b, mid);
+    } else if (b->left) {
+        replace_node_in_parent(b, b->left);
+    } else if (b->right) {
+        replace_node_in_parent(b, b->right);
     } else {
-        replace_node(b, NULL);
+        replace_node_in_parent(b, NULL);
     }
 }
 
