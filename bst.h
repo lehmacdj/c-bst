@@ -1,12 +1,23 @@
 #pragma once
 
 /**
+ * The value of the thing in the tree.
+ */
+typedef int V;
+
+/**
+ * A function poVer type for something that consumes values of the trees and
+ * returns nothing.
+ */
+typedef void (*Consumer)(V);
+
+/**
  * Represents a BST with ints as keys and values. Keys in [left] are < [key]
  * and keys in [right] are > [key].
  */
 struct BST {
     int key;
-    int value;
+    V value;
     struct BST* left;
     struct BST* right;
     struct BST* parent;
@@ -15,7 +26,7 @@ struct BST {
 /**
  * Return a BST with initial key [k] and value [v].
  */
-struct BST* create_bst(int k, int v);
+struct BST* create_bst(int k, V v);
 
 /**
  * Destroy [bst].
@@ -35,7 +46,7 @@ int* bst_search(struct BST* bst, int k);
  * value instead of inserting.
  * Precondition bst != NULL.
  */
-void bst_insert(struct BST* bst, int k, int v);
+void bst_insert(struct BST* bst, int k, V v);
 
 /**
  * Delete the key and value associated with [k] from [bst]. If [k] is not in
@@ -43,3 +54,9 @@ void bst_insert(struct BST* bst, int k, int v);
  * Precondition bst != NULL.
  */
 void bst_delete(struct BST* bst, int k);
+
+
+/**
+ * Does an in order traversal of [bst] calling [c] on each node.
+ */
+void traverse(struct BST* bst, Consumer c);
