@@ -1,8 +1,24 @@
 #include "bst.h"
 #include <stdlib.h>
+#include <stdio.h>
+
+void printbst(struct BST* bst) {
+    printf("[%p](%d, %d)[%p, %p] at %p\n",
+           bst->parent,
+           bst->key,
+           bst->value,
+           bst->left,
+           bst->right,
+           bst);
+}
 
 struct BST* create_bst(int k, V v) {
-    struct BST* bst = malloc(sizeof(struct BST*));
+    struct BST* bst = malloc(2 * sizeof(int) + 3 * sizeof(void*));
+    if (bst == NULL) {
+        printf("Wasn't able to allocate memory!");
+        return NULL;
+    }
+
     bst->key = k;
     bst->value = v;
     bst->left = NULL;
@@ -12,6 +28,7 @@ struct BST* create_bst(int k, V v) {
 }
 
 void destroy_bst(struct BST* bst) {
+    printf("destroy bst: %p\n", bst);
     if (bst == NULL)
         return;
 
@@ -26,14 +43,15 @@ void destroy_bst(struct BST* bst) {
  */
 struct BST* tree_containing_key(struct BST* bst, int k) {
     struct BST* b = bst;
-    while (b->left != NULL && b->right != NULL && k != b->key) {
+    while ((k < b->key && b->left != NULL) ||
+            (k > b->key && b->right != NULL)) {
         if (k < bst->key)
             b = bst->left;
         else if (k > bst->key)
             b = bst->right;
     }
 
-    return bst;
+    return b;
 }
 
 V* bst_search(struct BST* bst, int k) {
@@ -44,10 +62,10 @@ V* bst_search(struct BST* bst, int k) {
 void bst_insert(struct BST* bst, int k, V v) {
     struct BST* b = tree_containing_key(bst, k);
 
-    if (b->key < k) {
+    if (k < b->key) {
         b->left = create_bst(k, v);
         b->left->parent = b;
-    } else if (b->key == k) {
+    } else if (k == b->key) {
         b->value = v;
     } else {
         b->right = create_bst(k, v);
@@ -116,4 +134,13 @@ void bst_traverse_node(struct BST* bst, NConsumer c) {
     bst_traverse_node(bst->left, c);
     (*c)(bst->key, bst->value);
     bst_traverse_node(bst->right, c);
+}
+
+void bst_traverse_bst(struct BST* bst, BConsumer c) {
+    if (bst == NULL)
+        return;
+
+    bst_traverse_bst(bst->left, c);
+    (*c)(bst);
+    bst_traverse_bst(bst->right, c);
 }

@@ -28,6 +28,11 @@ struct BST {
 };
 
 /**
+ * A function that consumes an entire bst (with access to children / parent).
+ */
+typedef void (*BConsumer)(struct BST*);
+
+/**
  * Return a BST with initial key [k] and value [v].
  */
 struct BST* create_bst(int k, V v);
@@ -69,3 +74,8 @@ void bst_traverse_value(struct BST* bst, VConsumer c);
  * Does an in order traversal of [bst] calling [c] on each node.
  */
 void bst_traverse_node(struct BST* bst, NConsumer c);
+
+/**
+ * Does an in order traversal of [bst] calling [c] on each node.
+ */
+void bst_traverse_bst(struct BST* bst, BConsumer c);
